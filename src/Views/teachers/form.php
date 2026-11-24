@@ -13,7 +13,7 @@ if ($remissions === []) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= $e($title) ?> � <?= $e($appName) ?></title>
+    <title><?= $e($title) ?> · <?= $e($appName) ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
@@ -67,14 +67,14 @@ if ($remissions === []) {
                     <template id="remission-template"><div class="remission-row grid gap-3 rounded-lg bg-slate-50 p-3 sm:grid-cols-[1fr_180px_auto] sm:items-end"><label class="block text-sm font-medium">Responsibility<select name="remission_type_id[]" class="mt-1.5 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal shadow-sm focus:border-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-700/20"><option value="">Choose a remission type</option><?php foreach ($remissionTypes as $type): ?><option value="<?= (int) $type['id'] ?>"><?= $e($type['name']) ?></option><?php endforeach; ?></select></label><label class="block text-sm font-medium">Hours per week<input type="number" name="remission_hours[]" min="0" max="168" step="0.25" class="mt-1.5 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal shadow-sm focus:border-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-700/20"></label><button type="button" class="remove-remission rounded-lg px-3 py-2.5 text-sm font-medium text-rose-700 hover:bg-rose-50">Remove</button></div></template>
                 </section>
                 <section class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-200/40 sm:p-6">
-                    <h2 class="font-semibold">Subjects this teacher can teach</h2>
-                    <p class="mt-1 text-sm text-slate-500">Set eligibility so the timetable can match subject demand to suitable staff.</p>
-                    <?php if ($subjects === []): ?>
-                        <p class="mt-4 rounded-lg bg-slate-50 p-4 text-sm text-slate-600">Add teaching requirements first. Their subjects will appear here.</p>
+                    <h2 class="font-semibold">Units this teacher can teach</h2>
+                    <p class="mt-1 text-sm text-slate-500">A teacher can teach the same unit on multiple courses.</p>
+                    <?php if ($units === []): ?>
+                        <p class="mt-4 rounded-lg bg-slate-50 p-4 text-sm text-slate-600">Add units in the curriculum before assigning teaching eligibility.</p>
                     <?php else: ?>
                         <div class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                            <?php foreach ($subjects as $subject): ?>
-                                <label class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-sm"><input type="checkbox" name="subject_ids[]" value="<?= (int) $subject['id'] ?>" <?= in_array((int) $subject['id'], $selectedSubjectIds, true) ? 'checked' : '' ?> class="rounded border-slate-300 text-cyan-700 focus:ring-cyan-700"><span><?= $e($subject['name']) ?></span></label>
+                            <?php foreach ($units as $unit): ?>
+                                <label class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-sm"><input type="checkbox" name="unit_ids[]" value="<?= (int) $unit['id'] ?>" <?= in_array((int) $unit['id'], $selectedUnitIds, true) ? 'checked' : '' ?> class="rounded border-slate-300 text-cyan-700 focus:ring-cyan-700"><span><?= $e(($unit['code'] ? $unit['code'] . ' · ' : '') . $unit['name']) ?></span></label>
                             <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
@@ -100,4 +100,3 @@ rows.addEventListener('click', event => {
 </script>
 </body>
 </html>
-

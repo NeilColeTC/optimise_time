@@ -16,7 +16,7 @@ final class DashboardController
     {
         $stats = [
             'teachers' => $this->database->count('teachers'),
-            'groups' => $this->database->count('teaching_groups'),
+            'courses' => $this->database->count('courses'),
             'rooms' => $this->database->count('rooms'),
             'sessions' => $this->database->count('scheduled_sessions'),
         ];
@@ -25,4 +25,3 @@ final class DashboardController
         require dirname(__DIR__) . '/Views/dashboard/index.php';
     }
 }
-

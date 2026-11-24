@@ -23,7 +23,8 @@ $navItems = ['Overview', 'Timetable', 'Teachers', 'Teaching demand', 'Rooms', 'R
             <a href="/" class="whitespace-nowrap rounded-lg bg-white/10 px-3 py-2 text-sm font-medium text-white">Overview</a>
             <a href="/teachers" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Teachers</a>
             <a href="/availability" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Availability</a>
-            <a href="/demand" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Teaching demand</a>
+            <a href="/demand" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Courses & units</a>
+            <a href="/calendar" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Academic calendar</a>
             <a href="/rooms" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Rooms</a>
             <a href="/week" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Week structure</a>
             <a href="/rules" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Rules</a>
@@ -60,7 +61,7 @@ $navItems = ['Overview', 'Timetable', 'Teachers', 'Teaching demand', 'Rooms', 'R
                     </div>
                 </div>
                 <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    <?php foreach ([['Teachers', 'teachers', 'Individual allocations and contact-hour limits'], ['Teaching groups', 'groups', 'Weekly subject-hour requirements'], ['Rooms', 'rooms', 'Capacity and room availability'], ['Scheduled sessions', 'sessions', 'Placed lessons in the current timetable']] as [$label, $key, $description]): ?>
+                    <?php foreach ([['Teachers', 'teachers', 'Individual allocations and contact-hour limits'], ['Courses', 'courses', 'Courses, units, and delivery requirements'], ['Rooms', 'rooms', 'Capacity and room availability'], ['Scheduled sessions', 'sessions', 'Placed lessons in the current timetable']] as [$label, $key, $description]): ?>
                         <article class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-200/40">
                             <p class="text-sm font-medium text-slate-500"><?= $e($label) ?></p>
                             <p class="mt-3 text-3xl font-semibold tracking-tight"><?= $stats[$key] ?></p>
@@ -80,7 +81,7 @@ $navItems = ['Overview', 'Timetable', 'Teachers', 'Teaching demand', 'Rooms', 'R
                         <span class="rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">Not generated</span>
                     </div>
                     <ol class="mt-6 grid gap-3 sm:grid-cols-2">
-                        <?php foreach ([['01', 'Set the week', 'Teaching days, periods, and breaks'], ['02', 'Enter teaching demand', 'Groups, subjects, and hours per week'], ['03', 'Add staff and rooms', 'Workload, qualifications, availability, and capacity'], ['04', 'Apply rules', 'Evening duties, lieu time, and other constraints']] as [$number, $title, $detail]): ?>
+                        <?php foreach ([['01', 'Set the calendar', 'Academic year, term dates, and bank holidays'], ['02', 'Build the curriculum', 'Courses, units, and FAT or Long delivery'], ['03', 'Add staff and rooms', 'Workload, unit eligibility, availability, and capacity'], ['04', 'Apply rules', 'Protected blocks, evening duties, and lieu time']] as [$number, $title, $detail]): ?>
                             <li class="flex gap-3 rounded-lg bg-slate-50 p-4">
                                 <span class="mt-0.5 text-xs font-bold text-cyan-700"><?= $e($number) ?></span>
                                 <span><strong class="block text-sm font-medium"><?= $e($title) ?></strong><span class="mt-1 block text-sm text-slate-500"><?= $e($detail) ?></span></span>
@@ -94,7 +95,7 @@ $navItems = ['Overview', 'Timetable', 'Teachers', 'Teaching demand', 'Rooms', 'R
                     <p class="mt-1 text-sm text-slate-500">A schedule is valid only when these checks pass.</p>
                     <ul class="mt-5 space-y-3 text-sm">
                         <?php foreach (['No teacher is booked in two places at once', 'No room or teaching group is double-booked', 'Room capacity meets group size', 'Teacher contact time stays within their personal maximum', 'Evening duty receives its configured half-day in lieu'] as $rule): ?>
-                            <li class="flex gap-2.5"><span class="text-emerald-600" aria-hidden="true">V</span><span><?= $e($rule) ?></span></li>
+                            <li class="flex gap-2.5"><span class="text-emerald-600" aria-hidden="true">✓</span><span><?= $e($rule) ?></span></li>
                         <?php endforeach; ?>
                     </ul>
                 </article>
@@ -104,4 +105,3 @@ $navItems = ['Overview', 'Timetable', 'Teachers', 'Teaching demand', 'Rooms', 'R
 </div>
 </body>
 </html>
-

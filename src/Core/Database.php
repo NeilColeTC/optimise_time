@@ -54,7 +54,7 @@ final class Database
 
     public function count(string $table): int
     {
-        if (!$this->connection || !in_array($table, ['teachers', 'teaching_groups', 'rooms', 'scheduled_sessions'], true)) {
+        if (!$this->connection || !in_array($table, ['teachers', 'courses', 'rooms', 'scheduled_sessions'], true)) {
             return 0;
         }
 
@@ -115,4 +115,3 @@ final class Database
         return $this->connection;
     }
 }
-
