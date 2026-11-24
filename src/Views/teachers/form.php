@@ -23,6 +23,7 @@ if ($remissions === []) {
         <nav class="flex gap-2 overflow-x-auto p-4 lg:flex-col" aria-label="Main navigation">
             <a href="/" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Overview</a>
             <a href="/teachers" aria-current="page" class="whitespace-nowrap rounded-lg bg-white/10 px-3 py-2 text-sm font-medium text-white">Teachers</a>
+            <a href="/availability" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Availability</a>
             <a href="/demand" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Teaching demand</a><a href="/rooms" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Rooms</a><a href="/week" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Week structure</a>
         </nav>
     </aside>
@@ -64,6 +65,19 @@ if ($remissions === []) {
                         <?php endforeach; ?>
                     </div>
                     <template id="remission-template"><div class="remission-row grid gap-3 rounded-lg bg-slate-50 p-3 sm:grid-cols-[1fr_180px_auto] sm:items-end"><label class="block text-sm font-medium">Responsibility<select name="remission_type_id[]" class="mt-1.5 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal shadow-sm focus:border-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-700/20"><option value="">Choose a remission type</option><?php foreach ($remissionTypes as $type): ?><option value="<?= (int) $type['id'] ?>"><?= $e($type['name']) ?></option><?php endforeach; ?></select></label><label class="block text-sm font-medium">Hours per week<input type="number" name="remission_hours[]" min="0" max="168" step="0.25" class="mt-1.5 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 font-normal shadow-sm focus:border-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-700/20"></label><button type="button" class="remove-remission rounded-lg px-3 py-2.5 text-sm font-medium text-rose-700 hover:bg-rose-50">Remove</button></div></template>
+                </section>
+                <section class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-200/40 sm:p-6">
+                    <h2 class="font-semibold">Subjects this teacher can teach</h2>
+                    <p class="mt-1 text-sm text-slate-500">Set eligibility so the timetable can match subject demand to suitable staff.</p>
+                    <?php if ($subjects === []): ?>
+                        <p class="mt-4 rounded-lg bg-slate-50 p-4 text-sm text-slate-600">Add teaching requirements first. Their subjects will appear here.</p>
+                    <?php else: ?>
+                        <div class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                            <?php foreach ($subjects as $subject): ?>
+                                <label class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-sm"><input type="checkbox" name="subject_ids[]" value="<?= (int) $subject['id'] ?>" <?= in_array((int) $subject['id'], $selectedSubjectIds, true) ? 'checked' : '' ?> class="rounded border-slate-300 text-cyan-700 focus:ring-cyan-700"><span><?= $e($subject['name']) ?></span></label>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </section>
                 <div class="flex flex-wrap items-center justify-between gap-3"><a href="/teachers" class="text-sm font-medium text-slate-600 hover:text-slate-950">Cancel</a><button type="submit" class="rounded-lg bg-cyan-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:ring-offset-2">Save teacher</button></div>
             </form>

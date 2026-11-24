@@ -3,7 +3,10 @@
 declare(strict_types=1);
 
 use App\Controllers\DashboardController;
+use App\Controllers\EveningDutyController;
+use App\Controllers\AvailabilityController;
 use App\Controllers\PlanningDataController;
+use App\Controllers\RulesController;
 use App\Controllers\ScheduleSetupController;
 use App\Controllers\TeacherController;
 use App\Core\Database;
@@ -18,6 +21,9 @@ $router = new Router();
 $database = Database::fromEnvironment();
 $planningData = new PlanningDataController($database);
 $scheduleSetup = new ScheduleSetupController($database);
+$availability = new AvailabilityController($database);
+$rules = new RulesController($database);
+$evenings = new EveningDutyController($database);
 $teachers = new TeacherController($database);
 $router->get('/', static function (): void {
     (new DashboardController(Database::fromEnvironment()))->index();
@@ -39,6 +45,13 @@ $router->post('/week/day/add', static fn () => $scheduleSetup->addDay());
 $router->post('/week/day/update', static fn () => $scheduleSetup->updateDay());
 $router->post('/week/slot/add', static fn () => $scheduleSetup->addSlot());
 $router->post('/week/slot/update', static fn () => $scheduleSetup->updateSlot());
+$router->get('/availability', static fn () => $availability->index());
+$router->post('/availability/save', static fn () => $availability->save());
+$router->get('/rules', static fn () => $rules->index());
+$router->post('/rules/save', static fn () => $rules->save());
+$router->get('/evenings', static fn () => $evenings->index());
+$router->post('/evenings/add', static fn () => $evenings->add());
+$router->post('/evenings/toggle', static fn () => $evenings->toggle());
 
 $router->dispatch($_SERVER['REQUEST_METHOD'] ?? 'GET', parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
 

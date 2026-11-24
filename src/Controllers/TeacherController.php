@@ -52,6 +52,10 @@ final class TeacherController
             Flash::set('error', 'The requested teacher could not be found.');
             $this->redirect('/teachers');
         }
+        $selectedSubjectIds = array_map('intval', array_column(
+            $this->database->all('SELECT subject_id FROM teacher_subjects WHERE teacher_id = ?', [$id]),
+            'subject_id'
+        ));
         $teacher['allocated_hours'] = number_format(((int) $teacher['allocated_teaching_minutes']) / 60, 2, '.', '');
         $teacher['reduced_hours'] = number_format(((int) $teacher['reduced_timetable_minutes']) / 60, 2, '.', '');
         $teacher['max_in_class_hours'] = number_format(((int) $teacher['max_in_class_minutes']) / 60, 2, '.', '');
@@ -63,7 +67,7 @@ final class TeacherController
             $remission['hours'] = number_format(((int) $remission['weekly_minutes']) / 60, 2, '.', '');
         }
         unset($remission);
-        $this->showForm($teacher, $remissions, [], 'Edit teacher', '/teachers/update?id=' . $id);
+        $this->showForm($teacher, $remissions, [], 'Edit teacher', '/teachers/update?id=' . $id, $selectedSubjectIds);
     }
 
     public function store(): void
@@ -117,7 +121,7 @@ final class TeacherController
         ];
         $errors = [];
         if ($teacher['first_name'] === '') {
-            $errors[] = 'Enter the teacher's first name.';
+            $errors[] = "Enter the teacher's first name.";
         }
         if ($teacher['last_name'] === '') {
             $errors[] = 'Enter the teacher's last name.';
@@ -132,6 +136,7 @@ final class TeacherController
         }
 
         $remissions = $this->readRemissions($errors);
+        $subjectIds = $this->readSubjectIds($errors);
         $totalRemissions = array_sum(array_column($remissions, 'weekly_minutes'));
         if ($teacher['allocated_teaching_minutes'] !== null && $teacher['reduced_timetable_minutes'] !== null
             && $totalRemissions + $teacher['reduced_timetable_minutes'] > $teacher['allocated_teaching_minutes']) {
@@ -145,7 +150,7 @@ final class TeacherController
                 'max_in_class_hours' => $_POST['max_in_class_hours'] ?? '',
             ]);
             $this->showForm($teacher, $this->postedRemissions(), $errors, $id ? 'Edit teacher' : 'Add teacher',
-                $id ? '/teachers/update?id=' . $id : '/teachers');
+                $id ? '/teachers/update?id=' . $id : '/teachers', $this->postedSubjectIds());
             return;
         }
 
@@ -160,7 +165,7 @@ final class TeacherController
         ];
 
         try {
-            $this->database->transaction(function (Database $database) use ($id, $values, $remissions): void {
+            $this->database->transaction(function (Database $database) use ($id, $values, $remissions, $subjectIds): void {
                 if ($id === null) {
                     $database->execute(
                         'INSERT INTO teachers (staff_code, first_name, last_name, allocated_teaching_minutes, reduced_timetable_minutes, max_in_class_minutes, is_active)
@@ -182,6 +187,10 @@ final class TeacherController
                         [$teacherId, $remission['remission_type_id'], $remission['weekly_minutes']]
                     );
                 }
+                $database->execute('DELETE FROM teacher_subjects WHERE teacher_id = ?', [$teacherId]);
+                foreach ($subjectIds as $subjectId) {
+                    $database->execute('INSERT INTO teacher_subjects (teacher_id, subject_id) VALUES (?, ?)', [$teacherId, $subjectId]);
+                }
             });
         } catch (Throwable $exception) {
             $errors[] = 'The teacher could not be saved. Check that the staff code is unique and try again.';
@@ -189,7 +198,7 @@ final class TeacherController
             $teacher['reduced_hours'] = $_POST['reduced_hours'] ?? '';
             $teacher['max_in_class_hours'] = $_POST['max_in_class_hours'] ?? '';
             $this->showForm($teacher, $this->postedRemissions(), $errors, $id ? 'Edit teacher' : 'Add teacher',
-                $id ? '/teachers/update?id=' . $id : '/teachers');
+                $id ? '/teachers/update?id=' . $id : '/teachers', $this->postedSubjectIds());
             return;
         }
 
@@ -198,9 +207,11 @@ final class TeacherController
     }
 
     /** @param list<string> $errors */
-    private function showForm(array $teacher, array $remissions, array $errors, string $title, string $action): void
+    private function showForm(array $teacher, array $remissions, array $errors, string $title, string $action, array $selectedSubjectIds = []): void
     {
         $remissionTypes = $this->database->all('SELECT id, name FROM remission_types WHERE is_active = 1 ORDER BY name');
+        $subjects = $this->database->all('SELECT id, name FROM subjects WHERE is_active = 1 ORDER BY name');
+        $selectedSubjectIds = array_map('intval', $selectedSubjectIds);
         $csrfToken = CsrfToken::value();
         $flash = Flash::consume();
         require dirname(__DIR__) . '/Views/teachers/form.php';
@@ -257,6 +268,34 @@ final class TeacherController
             }
         }
         return $rows;
+    }
+
+    /** @param list<string> $errors @return list<int> */
+    private function readSubjectIds(array &$errors): array
+    {
+        $values = $_POST['subject_ids'] ?? [];
+        if (!is_array($values)) {
+            $errors[] = 'Choose valid subjects for this teacher.';
+            return [];
+        }
+        $validIds = array_map('intval', array_column($this->database->all('SELECT id FROM subjects WHERE is_active = 1'), 'id'));
+        $selected = [];
+        foreach ($values as $value) {
+            $subjectId = filter_var($value, FILTER_VALIDATE_INT);
+            if (!$subjectId || !in_array($subjectId, $validIds, true)) {
+                $errors[] = 'One or more subject selections are invalid.';
+                continue;
+            }
+            $selected[$subjectId] = $subjectId;
+        }
+        return array_values($selected);
+    }
+
+    /** @return list<int> */
+    private function postedSubjectIds(): array
+    {
+        $values = $_POST['subject_ids'] ?? [];
+        return is_array($values) ? array_values(array_filter(array_map('intval', $values), static fn (int $id): bool => $id > 0)) : [];
     }
 
     private function emptyTeacher(): array

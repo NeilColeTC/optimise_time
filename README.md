@@ -17,10 +17,13 @@ A standalone PHP MVC application for building a weekly academic timetable around
 - Teaching demand by group and subject, including weekly hours, cohort size, and room type
 - Room inventory with capacity and active status
 - Configurable teaching days and time blocks, including breaks and period duration
+- Teacher subject eligibility and period-level availability/preferences
+- Configurable hard rule for evening duty and a contiguous half-day in lieu
+- Recurring weekly evening-duty assignments linked to the in-lieu constraint
 - SQL schema for staff workload, remissions, availability, courses, rooms, timetable slots, rules, and generated sessions
 - Environment-based database configuration
 
-Teacher availability, subject eligibility, rule-management screens, and the generation engine are the next implementation slices. Scheduling rules should be validated before an output is marked as valid.
+The timetable generation engine and result review are the next implementation slices. Scheduling rules should be validated before an output is marked as valid.
 
 ## Setup
 
@@ -31,11 +34,11 @@ Teacher availability, subject eligibility, rule-management screens, and the gene
 
 The dashboard can render without a configured database; it displays setup guidance until the connection is available.
 
-The teacher screen supports adding, editing, and removing profiles. Remission and reduced-timetable hours are subtracted from the allocated teaching hours to show an expected teaching target; the personal in-class maximum remains an independent limit.
+The teacher screen supports adding, editing, and deactivating profiles. Remission and reduced-timetable hours are subtracted from allocated teaching hours to show an expected teaching target; subject eligibility and the personal in-class maximum remain separate scheduling inputs.
 
 ## Workload model
 
 Each teacher has separate weekly values for allocated teaching minutes, remission minutes, reduced-timetable minutes, and maximum in-class minutes. This keeps expected allocation distinct from the individual contact-hour cap.
 
-Evening work and the half-day-in-lieu block are represented as configurable rules. The exact day and period block can be selected when the rule-management screen is built.
+Evening work, eligible in-lieu days, and the length of the uninterrupted half-day block are configurable. The generator must reserve a valid block for each teacher assigned an evening duty.
 

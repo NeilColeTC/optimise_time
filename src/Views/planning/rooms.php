@@ -18,6 +18,7 @@ $appName = getenv('APP_NAME') ?: 'Academic Timetable Optimiser';
         <nav class="flex gap-2 overflow-x-auto p-4 lg:flex-col" aria-label="Main navigation">
             <a href="/" class="rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5">Overview</a>
             <a href="/teachers" class="rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5">Teachers</a>
+            <a href="/availability" class="rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5">Availability</a>
             <a href="/demand" class="rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5">Teaching demand</a>
             <a href="/rooms" aria-current="page" class="rounded-lg bg-white/10 px-3 py-2 text-sm font-medium">Rooms</a>
             <a href="/week" class="rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5">Week structure</a>

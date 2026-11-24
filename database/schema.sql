@@ -78,6 +78,19 @@ CREATE TABLE teacher_availability (
   CONSTRAINT fk_teacher_availability_slot FOREIGN KEY (time_slot_id) REFERENCES time_slots(id)
 );
 
+CREATE TABLE teacher_evening_duties (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  teacher_id BIGINT UNSIGNED NOT NULL,
+  week_day_id TINYINT UNSIGNED NOT NULL,
+  time_slot_id BIGINT UNSIGNED NOT NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_teacher_evening_duty (teacher_id, week_day_id, time_slot_id),
+  CONSTRAINT fk_evening_duty_teacher FOREIGN KEY (teacher_id) REFERENCES teachers(id),
+  CONSTRAINT fk_evening_duty_day FOREIGN KEY (week_day_id) REFERENCES week_days(id),
+  CONSTRAINT fk_evening_duty_slot FOREIGN KEY (time_slot_id) REFERENCES time_slots(id)
+);
+
 CREATE TABLE subjects (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(160) NOT NULL UNIQUE,

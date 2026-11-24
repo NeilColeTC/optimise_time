@@ -22,10 +22,12 @@ $navItems = ['Overview', 'Timetable', 'Teachers', 'Teaching demand', 'Rooms', 'R
         <nav class="flex gap-2 overflow-x-auto p-4 lg:flex-col" aria-label="Main navigation">
             <a href="/" class="whitespace-nowrap rounded-lg bg-white/10 px-3 py-2 text-sm font-medium text-white">Overview</a>
             <a href="/teachers" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Teachers</a>
+            <a href="/availability" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Availability</a>
             <a href="/demand" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Teaching demand</a>
             <a href="/rooms" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Rooms</a>
             <a href="/week" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Week structure</a>
-            <a href="#" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-500">Rules <span class="ml-2 text-xs">Setup</span></a>
+            <a href="/rules" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Rules</a>
+            <a href="/evenings" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Evening duties</a>
         </nav>
         <div class="mt-auto hidden border-t border-white/10 p-5 text-xs leading-5 text-slate-400 lg:block">
             Weekly timetable workspace<br>Rules are checked before a timetable is accepted.
@@ -78,7 +80,7 @@ $navItems = ['Overview', 'Timetable', 'Teachers', 'Teaching demand', 'Rooms', 'R
                         <span class="rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">Not generated</span>
                     </div>
                     <ol class="mt-6 grid gap-3 sm:grid-cols-2">
-                        <?php foreach ([['01', 'Set the week', 'Teaching days, periods, and breaks'], ['02', 'Enter teaching demand', 'Groups, subjects, and hours per week'], ['03', 'Add staff and rooms', 'Workload profiles, caps, capacity, and access'], ['04', 'Apply rules', 'Evening duties, lieu time, and other constraints']] as [$number, $title, $detail]): ?>
+                        <?php foreach ([['01', 'Set the week', 'Teaching days, periods, and breaks'], ['02', 'Enter teaching demand', 'Groups, subjects, and hours per week'], ['03', 'Add staff and rooms', 'Workload, qualifications, availability, and capacity'], ['04', 'Apply rules', 'Evening duties, lieu time, and other constraints']] as [$number, $title, $detail]): ?>
                             <li class="flex gap-3 rounded-lg bg-slate-50 p-4">
                                 <span class="mt-0.5 text-xs font-bold text-cyan-700"><?= $e($number) ?></span>
                                 <span><strong class="block text-sm font-medium"><?= $e($title) ?></strong><span class="mt-1 block text-sm text-slate-500"><?= $e($detail) ?></span></span>
