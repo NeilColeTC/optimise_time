@@ -48,6 +48,13 @@ CREATE TABLE remission_types (
   is_active TINYINT(1) NOT NULL DEFAULT 1
 );
 
+INSERT IGNORE INTO remission_types (name, description) VALUES
+  ('Course leadership', 'Leadership or coordination responsibility'),
+  ('Programme coordination', 'Programme or curriculum coordination'),
+  ('Quality assurance', 'Quality assurance and improvement work'),
+  ('Tutorial and learner support', 'Tutorial, pastoral, or learner support'),
+  ('Other', 'Other agreed remission responsibility');
+
 CREATE TABLE teacher_remissions (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   teacher_id BIGINT UNSIGNED NOT NULL,

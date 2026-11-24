@@ -20,11 +20,11 @@ $navItems = ['Overview', 'Timetable', 'Teachers', 'Teaching demand', 'Rooms', 'R
             <h1 class="mt-2 text-lg font-semibold"><?= $e($appName) ?></h1>
         </div>
         <nav class="flex gap-2 overflow-x-auto p-4 lg:flex-col" aria-label="Main navigation">
-            <?php foreach ($navItems as $index => $item): ?>
-                <a href="<?= $index === 0 ? '/' : '#' ?>" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm <?= $index === 0 ? 'bg-white/10 font-medium text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white' ?>">
-                    <?= $e($item) ?><?= $index > 0 ? '<span class="ml-2 text-xs text-slate-500">Setup</span>' : '' ?>
-                </a>
-            <?php endforeach; ?>
+            <a href="/" class="whitespace-nowrap rounded-lg bg-white/10 px-3 py-2 text-sm font-medium text-white">Overview</a>
+            <a href="/teachers" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white">Teachers</a>
+            <a href="#" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-500">Teaching demand <span class="ml-2 text-xs">Setup</span></a>
+            <a href="#" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-500">Rooms <span class="ml-2 text-xs">Setup</span></a>
+            <a href="#" class="whitespace-nowrap rounded-lg px-3 py-2 text-sm text-slate-500">Rules <span class="ml-2 text-xs">Setup</span></a>
         </nav>
         <div class="mt-auto hidden border-t border-white/10 p-5 text-xs leading-5 text-slate-400 lg:block">
             Weekly timetable workspace<br>Rules are checked before a timetable is accepted.

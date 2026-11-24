@@ -6,18 +6,23 @@ namespace App\Core;
 
 final class Router
 {
-    /** @var array<string, callable(): void> */
-    private array $getRoutes = [];
+    /** @var array<string, array<string, callable(): void>> */
+    private array $routes = [];
 
     public function get(string $path, callable $handler): void
     {
-        $this->getRoutes[$path] = $handler;
+        $this->routes['GET'][$path] = $handler;
+    }
+
+    public function post(string $path, callable $handler): void
+    {
+        $this->routes['POST'][$path] = $handler;
     }
 
     public function dispatch(string $method, string $path): void
     {
-        if ($method === 'GET' && isset($this->getRoutes[$path])) {
-            ($this->getRoutes[$path])();
+        if (isset($this->routes[$method][$path])) {
+            ($this->routes[$method][$path])();
             return;
         }
 

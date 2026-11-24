@@ -13,10 +13,11 @@ A standalone PHP MVC application for building a weekly academic timetable around
 
 - MVC front controller and simple router
 - Dashboard shell with navigation for timetable setup areas
+- Teacher workload profiles with remission breakdowns and individual contact-hour caps
 - SQL schema for staff workload, remissions, availability, courses, rooms, timetable slots, rules, and generated sessions
 - Environment-based database configuration
 
-The timetable optimiser and data-entry screens are the next implementation slices. Scheduling rules should be validated before an output is marked as valid.
+Teaching-demand, room, timetable-grid, and rule-management screens are the next implementation slices. Scheduling rules should be validated before an output is marked as valid.
 
 ## Setup
 
@@ -26,6 +27,8 @@ The timetable optimiser and data-entry screens are the next implementation slice
 4. Serve the `public` directory as the web root, for example with `php -S localhost:8000 -t public`.
 
 The dashboard can render without a configured database; it displays setup guidance until the connection is available.
+
+The teacher screen supports adding, editing, and removing profiles. Remission and reduced-timetable hours are subtracted from the allocated teaching hours to show an expected teaching target; the personal in-class maximum remains an independent limit.
 
 ## Workload model
 

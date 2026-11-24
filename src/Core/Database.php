@@ -6,6 +6,7 @@ namespace App\Core;
 
 use PDO;
 use PDOException;
+use RuntimeException;
 
 final class Database
 {
@@ -58,6 +59,60 @@ final class Database
         }
 
         return (int) $this->connection->query("SELECT COUNT(*) FROM `{$table}`")->fetchColumn();
+    }
+
+    /** @return list<array<string, mixed>> */
+    public function all(string $sql, array $parameters = []): array
+    {
+        return $this->statement($sql, $parameters)->fetchAll();
+    }
+
+    /** @return array<string, mixed>|null */
+    public function one(string $sql, array $parameters = []): ?array
+    {
+        $row = $this->statement($sql, $parameters)->fetch();
+        return $row === false ? null : $row;
+    }
+
+    public function execute(string $sql, array $parameters = []): int
+    {
+        return $this->statement($sql, $parameters)->rowCount();
+    }
+
+    public function insertId(): int
+    {
+        return (int) $this->connection()->lastInsertId();
+    }
+
+    public function transaction(callable $callback): mixed
+    {
+        $connection = $this->connection();
+        $connection->beginTransaction();
+        try {
+            $result = $callback($this);
+            $connection->commit();
+            return $result;
+        } catch (\Throwable $exception) {
+            if ($connection->inTransaction()) {
+                $connection->rollBack();
+            }
+            throw $exception;
+        }
+    }
+
+    private function statement(string $sql, array $parameters): \PDOStatement
+    {
+        $statement = $this->connection()->prepare($sql);
+        $statement->execute($parameters);
+        return $statement;
+    }
+
+    private function connection(): PDO
+    {
+        if (!$this->connection) {
+            throw new RuntimeException($this->connectionError ?? 'Database connection is unavailable.');
+        }
+        return $this->connection;
     }
 }
 
