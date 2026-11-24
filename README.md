@@ -34,7 +34,7 @@ The timetable generation engine and result review are the next implementation sl
 
 The dashboard can render without a configured database; it displays setup guidance until the connection is available.
 
-The teacher screen supports adding, editing, and deactivating profiles. Remission and reduced-timetable hours are subtracted from allocated teaching hours to show an expected teaching target; subject eligibility and the personal in-class maximum remain separate scheduling inputs.
+The teacher screen supports adding, editing, and deactivating profiles. Remission and reduced-timetable hours are subtracted from allocated teaching hours to show an expected teaching target; subject eligibility and the personal in-class maximum remain separate scheduling inputs. Each teaching requirement also specifies a lesson length so weekly demand can be split into whole sessions.
 
 ## Workload model
 

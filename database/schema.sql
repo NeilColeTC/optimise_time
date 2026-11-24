@@ -118,6 +118,7 @@ CREATE TABLE group_subject_requirements (
   teaching_group_id BIGINT UNSIGNED NOT NULL,
   subject_id BIGINT UNSIGNED NOT NULL,
   weekly_minutes SMALLINT UNSIGNED NOT NULL,
+  session_length_minutes SMALLINT UNSIGNED NOT NULL DEFAULT 60,
   required_room_type VARCHAR(100) NULL,
   UNIQUE KEY uq_group_subject (teaching_group_id, subject_id),
   CONSTRAINT fk_group_requirement_group FOREIGN KEY (teaching_group_id) REFERENCES teaching_groups(id) ON DELETE CASCADE,

@@ -22,7 +22,7 @@ final class PlanningDataController
             return;
         }
         $requirements = $this->database->all(
-            'SELECT r.id, r.weekly_minutes, r.required_room_type, g.name AS group_name, g.cohort_size,
+            'SELECT r.id, r.weekly_minutes, r.session_length_minutes, r.required_room_type, g.name AS group_name, g.cohort_size,
                 s.name AS subject_name, s.code AS subject_code
              FROM group_subject_requirements r
              JOIN teaching_groups g ON g.id = r.teaching_group_id
@@ -31,7 +31,7 @@ final class PlanningDataController
         );
         $editId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
         $edit = $editId ? $this->database->one(
-            'SELECT r.id, r.weekly_minutes, r.required_room_type, g.name AS group_name, g.cohort_size, s.name AS subject_name
+            'SELECT r.id, r.weekly_minutes, r.session_length_minutes, r.required_room_type, g.name AS group_name, g.cohort_size, s.name AS subject_name
              FROM group_subject_requirements r
              JOIN teaching_groups g ON g.id = r.teaching_group_id
              JOIN subjects s ON s.id = r.subject_id WHERE r.id = ?',
@@ -56,16 +56,18 @@ final class PlanningDataController
         $subjectName = trim((string) ($_POST['subject_name'] ?? ''));
         $cohortSize = filter_var($_POST['cohort_size'] ?? null, FILTER_VALIDATE_INT);
         $hours = filter_var($_POST['weekly_hours'] ?? null, FILTER_VALIDATE_FLOAT);
+        $sessionLength = filter_var($_POST['session_length_minutes'] ?? null, FILTER_VALIDATE_INT);
         $roomType = trim((string) ($_POST['required_room_type'] ?? ''));
         if ($groupName === '' || strlen($groupName) > 120 || $subjectName === '' || strlen($subjectName) > 160
             || $cohortSize === false || $cohortSize < 0 || $cohortSize > 5000
-            || $hours === false || $hours <= 0 || $hours > 168 || strlen($roomType) > 100) {
-            Flash::set('error', 'Check the group, subject, cohort size, weekly hours, and room type fields.');
+            || $hours === false || $hours <= 0 || $hours > 168 || $sessionLength === false || $sessionLength < 15 || $sessionLength > 240
+            || ((int) round((float) $hours * 60)) % $sessionLength !== 0 || strlen($roomType) > 100) {
+            Flash::set('error', 'Check the group, subject, cohort size, weekly hours, session length, and room type. Weekly hours must divide into whole sessions.');
             $this->redirect('/demand' . ($id ? '?id=' . $id : ''));
         }
 
         try {
-            $this->database->transaction(function (Database $database) use ($id, $groupName, $subjectName, $cohortSize, $hours, $roomType): void {
+            $this->database->transaction(function (Database $database) use ($id, $groupName, $subjectName, $cohortSize, $hours, $sessionLength, $roomType): void {
                 $group = $database->one('SELECT id FROM teaching_groups WHERE name = ?', [$groupName]);
                 if (!$group) {
                     $database->execute('INSERT INTO teaching_groups (name, cohort_size) VALUES (?, ?)', [$groupName, $cohortSize]);
@@ -85,14 +87,14 @@ final class PlanningDataController
                 $minutes = (int) round((float) $hours * 60);
                 if ($id) {
                     $database->execute(
-                        'UPDATE group_subject_requirements SET teaching_group_id = ?, subject_id = ?, weekly_minutes = ?, required_room_type = ? WHERE id = ?',
-                        [$groupId, $subjectId, $minutes, $roomType !== '' ? $roomType : null, $id]
+                        'UPDATE group_subject_requirements SET teaching_group_id = ?, subject_id = ?, weekly_minutes = ?, session_length_minutes = ?, required_room_type = ? WHERE id = ?',
+                        [$groupId, $subjectId, $minutes, $sessionLength, $roomType !== '' ? $roomType : null, $id]
                     );
                 } else {
                     $database->execute(
-                        'INSERT INTO group_subject_requirements (teaching_group_id, subject_id, weekly_minutes, required_room_type)
-                         VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE weekly_minutes = VALUES(weekly_minutes), required_room_type = VALUES(required_room_type)',
-                        [$groupId, $subjectId, $minutes, $roomType !== '' ? $roomType : null]
+                        'INSERT INTO group_subject_requirements (teaching_group_id, subject_id, weekly_minutes, session_length_minutes, required_room_type)
+                         VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE weekly_minutes = VALUES(weekly_minutes), session_length_minutes = VALUES(session_length_minutes), required_room_type = VALUES(required_room_type)',
+                        [$groupId, $subjectId, $minutes, $sessionLength, $roomType !== '' ? $roomType : null]
                     );
                 }
             });
