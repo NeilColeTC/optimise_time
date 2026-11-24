@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Controllers\DashboardController;
 use App\Controllers\PlanningDataController;
+use App\Controllers\ScheduleSetupController;
 use App\Controllers\TeacherController;
 use App\Core\Database;
 use App\Core\Router;
@@ -16,6 +17,7 @@ session_start();
 $router = new Router();
 $database = Database::fromEnvironment();
 $planningData = new PlanningDataController($database);
+$scheduleSetup = new ScheduleSetupController($database);
 $teachers = new TeacherController($database);
 $router->get('/', static function (): void {
     (new DashboardController(Database::fromEnvironment()))->index();
@@ -32,6 +34,11 @@ $router->post('/demand/delete', static fn () => $planningData->deleteDemand());
 $router->get('/rooms', static fn () => $planningData->rooms());
 $router->post('/rooms/save', static fn () => $planningData->saveRoom());
 $router->post('/rooms/deactivate', static fn () => $planningData->deactivateRoom());
+$router->get('/week', static fn () => $scheduleSetup->index());
+$router->post('/week/day/add', static fn () => $scheduleSetup->addDay());
+$router->post('/week/day/update', static fn () => $scheduleSetup->updateDay());
+$router->post('/week/slot/add', static fn () => $scheduleSetup->addSlot());
+$router->post('/week/slot/update', static fn () => $scheduleSetup->updateSlot());
 
 $router->dispatch($_SERVER['REQUEST_METHOD'] ?? 'GET', parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
 

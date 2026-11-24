@@ -16,10 +16,11 @@ A standalone PHP MVC application for building a weekly academic timetable around
 - Teacher workload profiles with remission breakdowns and individual contact-hour caps
 - Teaching demand by group and subject, including weekly hours, cohort size, and room type
 - Room inventory with capacity and active status
+- Configurable teaching days and time blocks, including breaks and period duration
 - SQL schema for staff workload, remissions, availability, courses, rooms, timetable slots, rules, and generated sessions
 - Environment-based database configuration
 
-Timetable-grid and rule-management screens and the generation engine are the next implementation slices. Scheduling rules should be validated before an output is marked as valid.
+Teacher availability, subject eligibility, rule-management screens, and the generation engine are the next implementation slices. Scheduling rules should be validated before an output is marked as valid.
 
 ## Setup
 
