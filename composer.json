@@ -1,0 +1,16 @@
+{
+  "name": "clubhub/academic-timetable-optimiser",
+  "description": "Standalone weekly timetable planning application for an academic area",
+  "type": "project",
+  "require": {
+    "php": ">=8.3",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}
+
