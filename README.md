@@ -30,7 +30,7 @@ The timetable generation engine and result review are the next implementation sl
 1. Create a MySQL database and import `database/schema.sql`.
 2. Copy `.env.example` to `.env` and set the database connection values.
 3. Run `composer install`.
-4. Serve the `public` directory as the web root, for example with `php -S localhost:8000 -t public`.
+4. Serve the `public` directory with its front controller as the router, for example with `php -S localhost:8000 -t public public/index.php`.
 
 The dashboard can render without a configured database; it displays setup guidance until the connection is available.
 
